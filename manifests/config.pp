@@ -7,7 +7,6 @@ class openfire::config {
 	  group  => 'openfire',
 	  mode   => '750',
 	  owner  => 'openfire',
-	  type   => 'directory',
 	}
 
 }
