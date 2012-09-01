@@ -24,7 +24,7 @@ class openfire::config {
 	  group   => 'root',
 	  mode    => '755',
 	  owner   => 'root',
-		source	=>	'puppet:///s_openfire/openfire_init', 
+		source	=>	'puppet:///openfire/openfire_init', 
 	}
 	
 }
