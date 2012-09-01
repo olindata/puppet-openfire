@@ -4,4 +4,8 @@ class openfire::java {
 		ensure =>	'installed',
 	}
 
+	package { 'sun-java6-jre':
+		ensure	=> 'installed',
+	}
+
 }
