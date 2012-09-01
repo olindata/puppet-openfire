@@ -18,4 +18,13 @@ class openfire::config {
 		require	=> Class["openfire::installer"],
 	}
 
+	# Had to tweak openfire init script and hence puppet managing it
+	file { '/etc/init.d/openfire':
+	  ensure  => 'file',
+	  group   => 'root',
+	  mode    => '755',
+	  owner   => 'root',
+		source	=>	'puppet:///s_openfire/openfire_init', 
+	}
+	
 }
