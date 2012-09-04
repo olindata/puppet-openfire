@@ -6,16 +6,16 @@ class openfire::java {
 
  exec
     { "/bin/echo \"sun-java6-plugin shared/accepted-sun-dlj-v1-1 boolean true\" | /usr/bin/debconf-set-selections":
-        alias     =>  "debconf-set-selections-sun-java6-plugin";
+        alias     =>  "debconf-set-selections-sun-java6-plugin",
+				unless	=> "dpkg -s sun-java6-plugin";
 
       "/bin/echo \"sun-java6-bin shared/accepted-sun-dlj-v1-1 boolean true\" | /usr/bin/debconf-set-selections":
-        alias     =>  "debconf-set-selections-sun-java6-bin";
+        alias     =>  "debconf-set-selections-sun-java6-bin",
+				unless	=>	"dpkg -s sun-java6-bin";
 
       "/bin/echo \"sun-java6-jre shared/accepted-sun-dlj-v1-1 boolean true\" | /usr/bin/debconf-set-selections":
-        alias     =>  "debconf-set-selections-sun-java6-jre";
-
-		unless	=> "dpkg -s sun-java6-jre sun-java6-bin sun-java6-plugin",
-
+        alias     =>  "debconf-set-selections-sun-java6-jre",
+				unless	=>	"dpkg -s sun-java6-jre";
     } 
 
 
