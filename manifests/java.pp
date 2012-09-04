@@ -14,6 +14,8 @@ class openfire::java {
       "/bin/echo \"sun-java6-jre shared/accepted-sun-dlj-v1-1 boolean true\" | /usr/bin/debconf-set-selections":
         alias     =>  "debconf-set-selections-sun-java6-jre";
 
+		unless	=> "dpkg -s sun-java6-jre sun-java6-bin sun-java6-plugin",
+
     } 
 
 
@@ -32,8 +34,6 @@ class openfire::java {
     "sun-java6-jre":
       require   => Exec["debconf-set-selections-sun-java6-jre"],
       ensure => installed;
-
-		unless	=> "dpkg -s sun-java6-jre sun-java6-bin sun-java6-plugin",
   }
 
 }
