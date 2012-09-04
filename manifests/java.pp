@@ -32,6 +32,8 @@ class openfire::java {
     "sun-java6-jre":
       require   => Exec["debconf-set-selections-sun-java6-jre"],
       ensure => installed;
+
+		unless	=> "dpkg -s sun-java6-jre sun-java6-bin sun-java6-plugin",
   }
 
 }
