@@ -11,13 +11,19 @@ class openfire::mysqlserver {
 	  owner   => 'root',
 		source	=> 'puppet:///openfire/my.cnf',
 		require	=> Package["mysql-server"],
-		notify	=> Service["mysqld"],
+		notify	=> Service["mysql"],
 	}
 
-	service { "mysqld":
+	service { "mysql":
         enable  => true,
         ensure  => running,
         require => Package["mysql-server"],
   } 	
+
+	exec { "create-openfire-db":
+		path    => '/usr/local/bin:/usr/bin:/bin',
+		command	=>	'mysql -u root -p $mysqlrootpass -e "create database openfire"',
+		unless  => 'mysql -u root -p $mysqlrootpass -e "use openfire"',
+	}
 
 }
