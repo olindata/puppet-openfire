@@ -1,4 +1,4 @@
-class openfire::mysql::server {
+class openfire::mysqlserver {
 
 	package { "mysql-server":
 						ensure	=> installed,
