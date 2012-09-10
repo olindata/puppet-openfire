@@ -2,9 +2,9 @@ class openfire::params {
 
 	# Define your variables in your global site.pp and keep it private
 
-	$openfirerootpass	=	$::openfire_root_pass ? {
+	$openfirerootpass	=	$::openfiredb_root_pass ? {
 		''	=> FALSE,
-		default	=>	$::openfire_root_pass,
+		default	=>	$::openfiredb_root_pass,
 	}
 
 	$openfireadmin	= $::openfire_admin ? {
