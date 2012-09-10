@@ -22,8 +22,8 @@ class openfire::mysqlserver {
 
 	exec { "create-openfire-db":
 		path    => '/usr/local/bin:/usr/bin:/bin',
-		command	=>	'mysql -u root -p $mysqlrootpass -e "create database openfire"',
-		unless  => 'mysql -u root -p $mysqlrootpass -e "use openfire"',
+		command	=>	"mysql -u root -p $openfirerootpass -e 'create database openfire'",
+		unless  => "mysql -u root -p $openfirerootpass -e 'use openfire'",
 	}
 
 }
