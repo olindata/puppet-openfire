@@ -40,13 +40,23 @@ class openfire::mysqlserver {
 		require => Exec["set-mysql-root"],
 	}
 
+	# Import vanilla db structure content into openfire database
+	#
+	exec { "create-openfire-db-content":
+		path    => '/usr/local/bin:/usr/bin:/bin',
+		command	=>	"mysql -u root -p$openfire::params::openfirerootpass openfire < /etc/openfire/openfiredb_vanilla.sql",
+		unless  => "mysql -u root -p$openfire::params::openfirerootpass -e 'use openfire'",
+		onlyif =>	"test -e /etc/openfire/openfiredb_vanilla.sql",
+		require => [ File["/etc/openfire/openfiredb_vanilla.sql"], Exec["create-openfire-db"] ],
+	}
+
 	# Create admin user for openfire 
 	#
 	exec { "create-openfire-admin":
 		path    => '/usr/local/bin:/usr/bin:/bin',
 		command	=>	"mysql -u root -p$openfire::params::openfirerootpass -e 'create user \'$openfire::params::openfireadmin\'@\'localhost\' identified by \'$openfire::params::openfireadminpass\''",
 		unless  => "mysql -u $openfire::params::openfireadmin -p$openfire::params::openfireadminpass -e 'status'",
-		require => Exec["create-openfire-db"],
+		require => Exec["create-openfire-db-content"],
 	}
 
 
@@ -57,9 +67,7 @@ class openfire::mysqlserver {
 		command	=>	"mysql -u root -p$openfire::params::openfirerootpass -e 'grant all privileges on openfire.\* to \'$openfire::params::openfireadmin\'@\'localhost\' identified by \'$openfire::params::openfireadminpass\''",
 		unless  => "mysql -u $openfire::params::openfireadmin -p$openfire::params::openfireadminpass -e 'use openfire'",
 		require => Exec["create-openfire-admin"],
-		notify => Openfire::Installer::Service["openfire"],
+		notify => Service["openfire"],
 	}
-
-
 
 }

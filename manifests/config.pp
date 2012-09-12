@@ -18,6 +18,15 @@ class openfire::config {
 		require	=> Class["openfire::installer"],
 	}
 
+	file { '/etc/openfire/openfiredb_vanilla.sql':
+		ensure	=> 'present',
+		owner	=>	'root',
+		group	=>	'root',
+		mode	=>	'640',
+		source	=>	'puppet:///openfire/openfiredb_vanilla.sql',
+		require	=>	Class["openfire::installer"],
+	}
+
 	# Had to tweak openfire init script and hence puppet managing it
 	file { '/etc/init.d/openfire':
 	  ensure  => 'file',
