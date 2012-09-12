@@ -20,10 +20,46 @@ class openfire::mysqlserver {
         require => Package["mysql-server"],
   } 	
 
+
+	# Set MySQL root pass for the first time
+	#
+	exec { "set-mysql-root":
+		path	=>	'/usr/local/bin:/usr/bin:/bin',
+		refreshonly	=> true,
+		command	=> "mysqladmin -u root password $openfire::params::openfirerootpass",
+		unless	=> "mysqladmin -uroot -p$openfire::params::openfirerootpassword status",
+		subscribe	=> Package["mysql-server"],	
+	}
+
+	# Create Database for openfire
+	#
 	exec { "create-openfire-db":
 		path    => '/usr/local/bin:/usr/bin:/bin',
 		command	=>	"mysql -u root -p$openfire::params::openfirerootpass -e 'create database openfire'",
 		unless  => "mysql -u root -p$openfire::params::openfirerootpass -e 'use openfire'",
+		require => Exec["set-mysql-root"],
 	}
+
+	# Create admin user for openfire 
+	#
+	exec { "create-openfire-admin":
+		path    => '/usr/local/bin:/usr/bin:/bin',
+		command	=>	"mysql -u root -p$openfire::params::openfirerootpass -e 'create user \'$openfire::params::openfireadmin\'@\'localhost\' identified by \'$openfire::params::openfireadminpass\''",
+		unless  => "mysql -u $openfire::params::openfireadmin -p$openfire::params::openfireadminpass -e 'status'",
+		require => Exec["create-openfire-db"],
+	}
+
+
+	# Create rights for admin user of openfire 
+	#
+	exec { "create-openfire-rights":
+		path    => '/usr/local/bin:/usr/bin:/bin',
+		command	=>	"mysql -u root -p$openfire::params::openfirerootpass -e 'grant all privileges on openfire.\* to \'$openfire::params::openfireadmin\'@\'localhost\' identified by \'$openfire::params::openfireadminpass\''",
+		unless  => "mysql -u $openfire::params::openfireadmin -p$openfire::params::openfireadminpass -e 'use openfire'",
+		require => Exec["create-openfire-admin"],
+		notify => Openfire::Installer::Service["openfire"],
+	}
+
+
 
 }
