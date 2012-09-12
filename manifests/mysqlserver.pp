@@ -56,7 +56,7 @@ class openfire::mysqlserver {
 		path    => '/usr/local/bin:/usr/bin:/bin',
 		command	=>	"mysql -u root -p$openfire::params::openfirerootpass -e 'create user \'$openfire::params::openfireadmin\'@\'localhost\' identified by \'$openfire::params::openfireadminpass\''",
 		unless  => "mysql -u $openfire::params::openfireadmin -p$openfire::params::openfireadminpass -e 'status'",
-		require => Exec["create-openfire-db-content"],
+		require => Exec["create-openfire-db"],
 	}
 
 
