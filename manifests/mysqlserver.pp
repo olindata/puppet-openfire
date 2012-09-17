@@ -28,7 +28,8 @@ class openfire::mysqlserver {
 		refreshonly	=> true,
 		command	=> "mysqladmin -u root password $openfire::params::openfirerootpass",
 		unless	=> "mysqladmin -uroot -p$openfire::params::openfirerootpassword status",
-		subscribe	=> Package["mysql-server"],	
+		require	=> Package["mysql-server"],
+		notify	=> Service["mysql"],
 	}
 
 	# Create Database for openfire
